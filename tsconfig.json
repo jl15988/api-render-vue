@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "lib",
+    "declaration": true,
+    "declarationDir": "types",
+    "baseUrl": "./"
+//    "paths": {
+//      "@/*": [
+//        "src/*"
+//      ]
+//    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
