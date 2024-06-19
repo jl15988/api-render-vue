@@ -1,17 +1,12 @@
-import {ApiRenderApiType, getApiRenderCache} from "../ApiRenderCache";
+import {getApiRenderCache} from "../ApiRenderCache";
 import {ref} from "vue";
 import ApiRenderUtil from "../ApiRenderUtil";
+import {ApiRenderOptionsType} from "../ApiRenderOptions";
 
 const defaultLabelKey = 'label'
 const defaultValueKey = 'value'
 
-export function useApiRenderValue<T extends {
-    [key: string]: {
-        valueKey?: string
-        labelKey?: string
-        api: ApiRenderApiType
-    } | ApiRenderApiType
-}>(loadApis: T) {
+export function useApiRenderValueByOptions<T extends ApiRenderOptionsType>(options: ApiRenderOptionsType, apiOptionKeys: (keyof T)[]) {
     const keyMap: {
         [key: string | number | symbol]: {
             valueKey: string
@@ -23,8 +18,8 @@ export function useApiRenderValue<T extends {
         [key: string | number | symbol]: any | any[]
     }>({})
 
-    for (let loadApisKey in loadApis) {
-        const api = loadApis[loadApisKey];
+    for (let loadApisKey in apiOptionKeys) {
+        const api = options[loadApisKey];
         if (api instanceof Function) {
             getApiRenderCache<any | any[]>(api).then(res => {
                 apiMap.value[loadApisKey] = res

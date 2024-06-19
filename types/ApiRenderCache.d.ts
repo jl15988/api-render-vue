@@ -1,4 +1,4 @@
-export type ApiRenderApiType = (params?: any) => Promise<any>;
+export type ApiRenderApiType = (...params: any[]) => Promise<any>;
 /**
  * 赋值缓存
  * @param api api 请求函数

@@ -14,7 +14,7 @@ api 渲染请求缓存
 // api 渲染请求函数类型
 import apiRenderConfig from "./ApiRenderConfig";
 
-export type ApiRenderApiType = (params?: any) => Promise<any>
+export type ApiRenderApiType = (...params: any[]) => Promise<any>
 // api 渲染缓存值
 type ApiRenderValueType = {
   value: any
