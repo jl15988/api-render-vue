@@ -20,6 +20,7 @@ type ApiRenderValueType = {
   value: any
   api: ApiRenderApiType
   timestamp: number
+  timeout: number
 }
 
 // 缓存
@@ -33,11 +34,12 @@ let clearCacheTime = 0
 
 // 遍历清理缓存
 function clearTimeoutCache(): Promise<boolean> {
+  if (!apiRenderConfig.openClearCache) return Promise.resolve(true);
   if (clearCacheTime + apiRenderConfig.clearCacheSpace > Date.now()) return Promise.resolve(true)
   clearCacheTime = Date.now()
   return new Promise((resolve) => {
     for (const [key, value] of apiRenderMap.entries()) {
-      if (value.timestamp + apiRenderConfig.cacheTimeout <= Date.now()) {
+      if (value.timeout <= Date.now()) {
         // 如果超时，则移除该键值对
         apiRenderMap.delete(key)
       }
@@ -86,15 +88,19 @@ function getApiKeyByCacheKey(cacheKey: ApiRenderApiType | number | string) {
 
 /**
  * 赋值缓存
- * @param api api 请求函数
+ * @param api api 请求函数，也用于缓存重载
  * @param value 缓存的值
  * @param key api 的 key 值，可用来声明 api 缓存的key，api 请求的数据会自动缓存，所以 api 函数尽量使用有名函数，或者如果使用匿名函数，在不保证匿名函数会字符会重复的前提下，请提供该字段
  */
-export function setApiRenderCache(api: ApiRenderApiType, value: any, key?: string | number) {
-  const cacheValue = {
+export function setApiRenderCache(value: any, api?: ApiRenderApiType, key?: string | number) {
+  if (!api && !key) {
+    throw new Error('api and key must have one of them.')
+  }
+  const cacheValue: ApiRenderValueType = {
     value: value,
-    api: api,
-    timestamp: Date.now()
+    api: api || (() => Promise.resolve(undefined)),
+    timestamp: Date.now(),
+    timeout: Date.now() + apiRenderConfig.cacheTimeout,
   }
   apiRenderMap.set(getApiCacheKey(api, key), cacheValue)
 }
@@ -112,15 +118,15 @@ export async function getApiRenderCache<T>(
   if (!api) return Promise.resolve(undefined)
   // 获取缓存的数据
   const cache = apiRenderMap.get(getApiCacheKey(api, key))
-  if (!apiRenderConfig.cacheTimeout || apiRenderConfig.cacheTimeout <= 0) {
-    // 没有超时时间都走请求
+  if (!apiRenderConfig.openCache || !apiRenderConfig.cacheTimeout || apiRenderConfig.cacheTimeout <= 0) {
+    // 没有开启缓存或没有超时时间都走请求
     return (await apiRenderRequest(api, key)) as T
   }
-  if (!cache || (cache && cache.timestamp && cache.timestamp + apiRenderConfig.cacheTimeout <= Date.now())) {
+  if (!cache || (cache && apiRenderConfig.openClearCache && cache.timeout && cache.timeout <= Date.now())) {
     // 没有缓存数据重新请求
     const res = await apiRenderRequest(api, key)
     // 缓存
-    setApiRenderCache(api, res, key)
+    setApiRenderCache(res, api, key)
     // 清理
     clearTimeoutCache()
     return res as T
@@ -138,17 +144,17 @@ async function reloadApiRenderCacheByKeyAndValue(
   const apiK = getApiKeyByCacheKey(key)
   const res = await apiRenderRequest(cacheItem.api, apiK)
   // 缓存
-  setApiRenderCache(cacheItem.api, res, apiK)
+  setApiRenderCache(res, cacheItem.api, apiK)
 }
 
 /**
  * 重新加载 api 缓存
- * @param apiKey 要加载的 api 换的 key，可以是具名函数，或者唯一ID，不能是匿名函数，不指定时则重新加载全部
+ * @param apiKeys 要加载的 api 缓存的 key，可以是具名函数，或者唯一ID，不能是匿名函数，不指定时则重新加载全部
  */
 export async function reloadApiRenderCache(
-  apiKey?: ApiRenderApiType | string | number
+  ...apiKeys: (ApiRenderApiType | string | number)[]
 ): Promise<void> {
-  if (!apiKey) {
+  if (!apiKeys) {
     // 如果没有指定 api 则重新加载全部
     for (const [key, value] of apiRenderMap.entries()) {
       if (!value || !value.api) {
@@ -159,12 +165,14 @@ export async function reloadApiRenderCache(
     }
     return Promise.resolve()
   }
-  // 重新加载单个缓存
-  const cache = apiRenderMap.get(apiKey)
-  if (!cache || !cache.api) {
-    return Promise.resolve()
+  for (let apiKey of apiKeys) {
+    // 重新加载单个缓存
+    const cache = apiRenderMap.get(apiKey)
+    if (!cache || !cache.api) {
+      return Promise.resolve()
+    }
+    await reloadApiRenderCacheByKeyAndValue(apiKey, cache)
   }
-  await reloadApiRenderCacheByKeyAndValue(apiKey, cache)
   // 清理
   clearTimeoutCache()
 }

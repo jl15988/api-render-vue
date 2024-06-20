@@ -12,7 +12,7 @@ module.exports = {
         filename: 'api-render-vue.min.js',//默认情况下创建的文件名
         // chunkFilename: '[name].js',
         path: path.resolve(__dirname, 'lib'),
-        library: "echartsBuilder",
+        library: "api-render-vue",
         libraryTarget: "umd",
         libraryExport: "default"
     },
@@ -21,9 +21,6 @@ module.exports = {
         //     '@': path.resolve(__dirname, 'src')
         // },
         extensions: ['.ts', '.js', '.json']
-    },
-    externals: {
-        echarts: "echarts"
     },
 
 //loader可以处理非js文件资源
@@ -54,10 +51,11 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new TerserPlugin({
+            extractComments: false, // 禁止生成LICENSE.txt文件
             terserOptions: {
                 compress: {
                     warnings: false,
-                    drop_console: true, // 去除console
+                    // drop_console: true, // 去除console
                     drop_debugger: true, // 去除debugger
                 },
             },

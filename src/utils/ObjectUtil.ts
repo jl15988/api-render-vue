@@ -121,6 +121,18 @@ class ObjectUtil {
         }
         return '';
     }
+
+    /**
+     * 对象不是布尔是如果未空则返回默认值
+     * @param obj 对象
+     * @param defaultValue 默认值，默认为空字符串
+     */
+    defaultIfNotBoolean(obj: any, defaultValue: any = ''): any {
+        if (typeof obj === 'boolean') {
+            return obj
+        }
+        return this.isEmpty(obj) ? defaultValue : obj
+    }
 }
 
 export default new ObjectUtil();
