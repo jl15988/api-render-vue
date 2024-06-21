@@ -23,7 +23,7 @@ export function useApiRenderOptions(api: ApiRenderApiType, options: {
     // 生成数据中的 value 属性名，默认 value
     dataValueKey?: string,
 }) {
-    const apiRenderOptionsData = ref([])
+    const apiRenderOptionsData = ref<any>([])
 
     let {apiKey, labelKey, valueKey, dataLabelKey, dataValueKey} = options || {}
 
@@ -38,7 +38,7 @@ export function useApiRenderOptions(api: ApiRenderApiType, options: {
 
         if (dataLabelKey !== labelKey || dataValueKey !== valueKey) {
             list = res.map(item => {
-                const obj = {}
+                const obj: Record<string, any> = {}
                 if (dataLabelKey !== labelKey) {
                     obj[dataLabelKey] = item[labelKey]
                 }

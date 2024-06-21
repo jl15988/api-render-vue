@@ -6,7 +6,7 @@ declare class ApiRenderTool {
      * @param valueKey value 关键字
      * @param value 匹配的 value 值
      */
-    getItemByValue<T>(arr: T[] | T, value: any, valueKey?: string): T | undefined;
+    getItemByValue<T extends Record<any, any>>(arr: T[] | T, value: any, valueKey?: string): T | undefined;
     /**
      * 通过 value 匹配获取 pai 数组数据中对应的项，如果数据为对象，则返回 valueKey 对应的值
      * @param api 请求的 api 函数
@@ -14,7 +14,7 @@ declare class ApiRenderTool {
      * @param value 匹配的 value 值
      * @param apiKey api 的 key 值，可用来声明 api 缓存的key，api 请求的数据会自动缓存，所以 api 函数尽量使用有名函数，或者如果使用匿名函数，在不保证匿名函数会字符会重复的前提下，请提供该字段
      */
-    getApiItem<T>(api: ApiRenderApiType, valueKey: string, value: any, apiKey?: string): Promise<T | undefined>;
+    getApiItem<T extends Record<string, any>>(api: ApiRenderApiType, valueKey: string, value: any, apiKey?: string): Promise<T | undefined>;
     /**
      * 解析项，判断项类型，如果项是对象，则返回 label 字段值，否则直接返回，如果项为空，则返回空字符串，未
      * @param item
@@ -48,7 +48,7 @@ declare class ApiRenderTool {
      * @param labelKey 最终解析返回的字段
      * @param apiKey api 的 key 值，可用来声明 api 缓存的key，api 请求的数据会自动缓存，所以 api 函数尽量使用有名函数，或者如果使用匿名函数，在不保证匿名函数会字符会重复的前提下，请提供该字段
      */
-    renderOptions<T>(api: ApiRenderApiType, valueKey?: string, labelKey?: string, apiKey?: string): Promise<{
+    renderOptions<T extends Record<string, any>>(api: ApiRenderApiType, valueKey?: string, labelKey?: string, apiKey?: string): Promise<{
         label: any;
         value: any;
         key: any;

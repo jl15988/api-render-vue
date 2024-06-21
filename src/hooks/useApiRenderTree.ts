@@ -37,7 +37,7 @@ export function useApiRenderTree(api: ApiRenderApiType, options: {
     labelKey = labelKey || 'label'
     valueKey = valueKey || 'value'
 
-    const apiRenderTreeData = ref([])
+    const apiRenderTreeData = ref<any>([])
 
     getApiRenderCache<any[]>(api, apiKey).then(res => {
         if (!res) return
@@ -45,7 +45,7 @@ export function useApiRenderTree(api: ApiRenderApiType, options: {
 
         if (treeLabelKey !== labelKey || treeValueKey !== valueKey) {
             list = res.map(item => {
-                const obj = {}
+                const obj: Record<string, any> = {}
                 if (treeLabelKey !== labelKey) {
                     obj[treeLabelKey] = item[labelKey]
                 }

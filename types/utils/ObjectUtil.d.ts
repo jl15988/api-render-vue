@@ -17,7 +17,7 @@ declare class ObjectUtil {
      * @param target 目标对象
      * @param sources 源对象
      */
-    deepAssign(target: object, ...sources: object[]): object;
+    deepAssign<S extends Record<string, any>, T extends Record<string, any>>(target: S, ...sources: T[]): object;
     /**
      * 深合并，target 不可为空，target[targetKey] 可为空，默认赋值为 {}
      * @param target 目标对象

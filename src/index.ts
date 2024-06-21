@@ -1,7 +1,7 @@
-import {setApiRenderOptions} from "./options/ApiRenderOptions";
+import {defineApiRenderOptions} from "./options/ApiRenderOptions";
 import {getApiRenderCache, reloadApiRenderCache, setApiRenderCache} from './ApiRenderCache'
 import ApiRenderTool from "./ApiRenderTool";
-import ApiRender from "./values";
+import ApiRenderValues from "./values";
 import {getApiRenderConfig, setApiRenderConfig} from "./ApiRenderConfig";
 import ArrayUtil from "./utils/ArrayUtil";
 import ObjectUtil from "./utils/ObjectUtil";
@@ -13,8 +13,11 @@ const ApiRenderUtils = {
     TreeUtil
 }
 
+const apiRenderVue = ApiRenderValues
+export default apiRenderVue;
+
 export {
-    setApiRenderOptions,
+    defineApiRenderOptions,
     setApiRenderCache,
     getApiRenderCache,
     reloadApiRenderCache,
@@ -23,6 +26,3 @@ export {
     getApiRenderConfig,
     ApiRenderUtils
 }
-
-const apiRenderVue = ApiRender
-export default apiRenderVue;

@@ -63,13 +63,16 @@ async function apiRenderRequest(api: ApiRenderApiType, key?: string | number) {
 
 // 获取 api 缓存 key
 function getApiCacheKey(
-  api: ApiRenderApiType,
+  api?: ApiRenderApiType,
   key?: string | number
 ): string | number | ApiRenderApiType {
   if (key) {
     // 如果指定 key 则直接使用 key
     return key
-  } else if (!api.name) {
+  } else if (!api) {
+    throw new Error('api and key must have one of them.')
+  }
+  if (!api.name) {
     // 匿名函数使用函数签名
     return api.toString()
   } else {

@@ -1,4 +1,5 @@
 import { ApiRenderApiType } from "../ApiRenderCache";
+import { PropType } from "vue";
 import { ApiRenderTreeOptionType } from "./renderApiRenderTree";
 import { ApiRenderOptionsOptionType } from "./renderApiRenderOptions";
 export type ApiRenderOptionsKeyConfigType = {
@@ -15,9 +16,7 @@ export type ApiRenderOptionsKeyConfigType = {
 export type ApiRenderOptionsConfigType = Partial<ApiRenderOptionsKeyConfigType> & {
     api: ApiRenderApiType;
 };
-export type ApiRenderOptionsType = {
-    [key: string]: ApiRenderOptionsConfigType | ApiRenderApiType;
-};
+export type ApiRenderOptionsType = Record<string, ApiRenderOptionsConfigType | ApiRenderApiType>;
 export declare const apiOptions: ApiRenderOptionsType;
 export declare const apiMapRef: import("vue").Ref<{
     [key: string]: any;
@@ -36,7 +35,25 @@ export declare function getDefaultApiRenderOptionsConfig(): ApiRenderOptionsKeyC
 /**
  * 设置 api 项
  */
-export declare function setApiRenderOptions<T extends ApiRenderOptionsType>(ops: T): {
+export declare function defineApiRenderOptions<T extends ApiRenderOptionsType>(ops: T): {
+    keysMap: { [key in keyof T]: any; };
+    ApiRender: import("vue").DefineComponent<{
+        apiKey: {
+            type: PropType<keyof T>;
+            required: true;
+        };
+        value: {
+            type: PropType<any>;
+        };
+    }, unknown, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+        apiKey: {
+            type: PropType<keyof T>;
+            required: true;
+        };
+        value: {
+            type: PropType<any>;
+        };
+    }>>, {}, {}>;
     /**
      * 解析 api 数据，匹配值，返回 label
      * @param apiKey api 的 option 关键字
@@ -44,7 +61,7 @@ export declare function setApiRenderOptions<T extends ApiRenderOptionsType>(ops:
      * @param valueKey 要匹配的数据 value 关键字
      * @param labelKey 返回的 label 关键字
      */
-    renderApiValue: (apiKey: keyof T, value: any, valueKey?: string, labelKey?: string) => import("vue").ComputedRef<any>;
+    renderApiValue: (apiKey: keyof T, value: any, valueKey?: string, labelKey?: string) => Promise<any>;
     /**
      * 解析 api 数据为选择项数据
      * @param apiKey api 的 option 关键字
@@ -68,7 +85,7 @@ export declare function setApiRenderOptions<T extends ApiRenderOptionsType>(ops:
  * @param apiOptions api 项
  * @param apiKey api 缓存 key
  */
-export declare function getApiDataIfNot<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T): void;
+export declare function getApiDataIfNot<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T): Promise<void>;
 /**
  * 获取 api 的 label 关键字，如果存在 labelKey 则返回 labelKey
  * @param apiKey api 缓存 key

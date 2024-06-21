@@ -16,5 +16,5 @@ export declare function useApiRenderOptions(api: ApiRenderApiType, options: {
     dataLabelKey?: string;
     dataValueKey?: string;
 }): {
-    apiRenderOptionsData: import("vue").Ref<any[]>;
+    apiRenderOptionsData: import("vue").Ref<any>;
 };

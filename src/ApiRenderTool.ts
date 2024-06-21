@@ -9,10 +9,10 @@ class ApiRenderTool {
      * @param valueKey value 关键字
      * @param value 匹配的 value 值
      */
-    getItemByValue<T>(arr: T[] | T, value: any, valueKey?: string): T | undefined {
+    getItemByValue<T extends Record<any, any>>(arr: T[] | T, value: any, valueKey?: string): T | undefined {
         valueKey = valueKey || apiRenderConfig.defaultValueKey
         if (Array.isArray(arr)) {
-            return arr.find((item) => item[valueKey] === value)
+            return arr.find((item) => item && (item[valueKey] === value))
         }
         return arr[valueKey]
     }
@@ -24,7 +24,7 @@ class ApiRenderTool {
      * @param value 匹配的 value 值
      * @param apiKey api 的 key 值，可用来声明 api 缓存的key，api 请求的数据会自动缓存，所以 api 函数尽量使用有名函数，或者如果使用匿名函数，在不保证匿名函数会字符会重复的前提下，请提供该字段
      */
-    async getApiItem<T>(
+    async getApiItem<T extends Record<string, any>>(
         api: ApiRenderApiType,
         valueKey: string,
         value: any,
@@ -83,8 +83,9 @@ class ApiRenderTool {
      * @param labelKey 最终解析返回的字段
      * @param apiKey api 的 key 值，可用来声明 api 缓存的key，api 请求的数据会自动缓存，所以 api 函数尽量使用有名函数，或者如果使用匿名函数，在不保证匿名函数会字符会重复的前提下，请提供该字段
      */
-    async renderOptions<T>(api: ApiRenderApiType, valueKey?: string, labelKey?: string, apiKey?: string) {
+    async renderOptions<T extends Record<string, any>>(api: ApiRenderApiType, valueKey?: string, labelKey?: string, apiKey?: string) {
         const list = await getApiRenderCache<T[]>(api, apiKey)
+        if (!list) return []
         return list.map(item => {
             return {
                 label: item[labelKey || apiRenderConfig.defaultLabelKey],

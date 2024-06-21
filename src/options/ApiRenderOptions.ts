@@ -1,5 +1,5 @@
 import {ApiRenderApiType, getApiRenderCache, reloadApiRenderCache} from "../ApiRenderCache";
-import {computed, ref} from "vue";
+import {computed, defineComponent, h, PropType, ref} from "vue";
 import {renderApiValueByOptions} from "./renderApiRenderValue";
 import apiRenderConfig from "../ApiRenderConfig";
 import {ApiRenderTreeOptionType, renderApiTreeByOptions} from "./renderApiRenderTree";
@@ -22,9 +22,7 @@ export type ApiRenderOptionsConfigType = Partial<ApiRenderOptionsKeyConfigType> 
     api: ApiRenderApiType
 }
 
-export type ApiRenderOptionsType = {
-    [key: string]: ApiRenderOptionsConfigType | ApiRenderApiType
-}
+export type ApiRenderOptionsType = Record<string, ApiRenderOptionsConfigType | ApiRenderApiType>
 
 export const apiOptions: ApiRenderOptionsType = {}
 
@@ -65,22 +63,23 @@ export function getDefaultApiRenderOptionsConfig(): ApiRenderOptionsKeyConfigTyp
 /**
  * 设置 api 项
  */
-export function setApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
+export function defineApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
     // 赋值默认值
     const defaultApiRenderOptionsConfig = getDefaultApiRenderOptionsConfig()
     ops = Object.assign({}, defaultApiRenderOptionsConfig, ops)
     Object.assign(apiOptions, ops)
 
+    type keysMapType = {
+        [key in keyof T]: any
+    }
+
+    const keysMap: keysMapType = {} as keysMapType
+    for (let opsKey in ops) {
+        keysMap[opsKey] = opsKey
+    }
+
     function renderApiValue(apiKey: keyof T, value: any, valueKey?: string, labelKey?: string) {
-        getApiDataIfNot(ops, apiKey)
-        return computed(() => {
-            const res = apiMapRef.value[apiKey]
-            if (!res) return ''
-            labelKey = labelKey || keyMap[apiKey].labelKey
-            valueKey = valueKey || keyMap[apiKey].valueKey
-            const item = ApiRenderUtil.getItemByValue(res, value, valueKey)
-            return ApiRenderUtil.renderValueByItem(item, labelKey)
-        })
+        return renderApiValueByOptions(ops, apiKey, value, valueKey, labelKey)
     }
 
     function renderApiOptions(apiKey: keyof T, options: ApiRenderOptionsOptionType) {
@@ -100,7 +99,27 @@ export function setApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
         })
     }
 
+    const ApiRender = defineComponent({
+        name: 'ApiRender',
+        props:{
+            apiKey:{
+                type: [String] as PropType<keyof T>,
+                required: true
+            },
+            value:{
+                type: Function as PropType<any>
+            }
+        },
+        async render() {
+            const {apiKey, value} = this.$props
+            // @ts-ignore
+            return renderApiValueByOptions(ops, apiKey, value)
+        }
+    })
+
     return {
+        keysMap,
+        ApiRender,
         /**
          * 解析 api 数据，匹配值，返回 label
          * @param apiKey api 的 option 关键字
@@ -134,18 +153,14 @@ export function setApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
  * @param apiOptions api 项
  * @param apiKey api 缓存 key
  */
-function getApiData<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T) {
+async function getApiData<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T) {
     const api = apiOptions[apiKey];
     if (api) {
         keyMap[apiKey] = getDefaultApiRenderOptionsConfig()
         if (api instanceof Function) {
-            getApiRenderCache<any | any[]>(api, apiKey.toString()).then(res => {
-                apiMapRef.value[apiKey] = res
-            })
+            apiMapRef.value[apiKey] = await getApiRenderCache<any | any[]>(api, apiKey.toString())
         } else {
-            getApiRenderCache<any | any[]>(api.api, apiKey.toString()).then(res => {
-                apiMapRef.value[apiKey] = res
-            })
+            apiMapRef.value[apiKey] = await getApiRenderCache<any | any[]>(api.api, apiKey.toString())
 
             keyMap[apiKey] = Object.assign({}, keyMap[apiKey], {
                 labelKey: api.labelKey || apiRenderConfig.defaultLabelKey,
@@ -160,10 +175,10 @@ function getApiData<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof
  * @param apiOptions api 项
  * @param apiKey api 缓存 key
  */
-export function getApiDataIfNot<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T) {
+export async function getApiDataIfNot<T extends ApiRenderOptionsType>(apiOptions: T, apiKey: keyof T) {
     const apiValue = apiMapRef.value[apiKey];
     if (!apiValue) {
-        getApiData(apiOptions, apiKey)
+        await getApiData(apiOptions, apiKey)
     }
 }
 

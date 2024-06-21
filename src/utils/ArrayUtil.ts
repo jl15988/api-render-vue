@@ -146,8 +146,8 @@ class ArrayUtil {
      * @param arr 要去重的数组
      * @param uniMapper 去重处理器，默认按当前元素去重
      */
-    unique(arr: any[], uniMapper?: (cur) => any): any[] {
-        const uniArr = [];
+    unique(arr: any[], uniMapper?: (cur: any) => any): any[] {
+        const uniArr: any[] = [];
         return arr.reduce((acc, cur) => {
             const uniK = uniMapper ? uniMapper(cur) : cur;
             if (!uniArr.includes(uniK)) {
@@ -164,7 +164,7 @@ class ArrayUtil {
      */
     intersection(...arrs: any[]): any[] {
         const [first, ...rest] = arrs;
-        return this.unique(first.filter(item => rest.every(array => array.includes(item))));
+        return this.unique(first.filter((item: any) => rest.every(array => array.includes(item))));
     }
 
     /**
@@ -194,7 +194,7 @@ class ArrayUtil {
      * @param arr 数组
      * @param keyMapper 分组关键字处理器
      */
-    groupBy(arr: any[], keyMapper: (cur) => any) {
+    groupBy(arr: any[], keyMapper: (cur: any) => any) {
         return arr.reduce((res, item) => {
             const key = keyMapper(item).toString();
             if (!res[key]) {

@@ -46,6 +46,7 @@ class ObjectUtil {
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 const value = obj[key];
+                // @ts-ignore
                 copy[key] = Array.isArray(value) ? ArrayUtil.deepCopy(obj[key]) : this.deepCopy(value);
             }
         }
@@ -57,7 +58,7 @@ class ObjectUtil {
      * @param target 目标对象
      * @param sources 源对象
      */
-    deepAssign(target: object, ...sources: object[]): object {
+    deepAssign<S extends Record<string, any>, T extends Record<string, any>>(target: S, ...sources: T[]): object {
         if (!sources) {
             return target;
         }
@@ -71,8 +72,10 @@ class ObjectUtil {
                     if (value === undefined || value === null) continue
                     if (Array.isArray(value)) {
                         if (!!value && !Array.isArray(value)) {
+                            // @ts-ignore
                             target[key] = ArrayUtil.deepAssign([], source[key])
                         } else {
+                            // @ts-ignore
                             target[key] = ArrayUtil.deepAssign(target[key] || [], source[key])
                         }
                     } else {
@@ -80,8 +83,10 @@ class ObjectUtil {
                             target[key] = value
                         } else {
                             if (!!target[key] && Array.isArray(target[key])) {
+                                // @ts-ignore
                                 target[key] = this.deepAssign({}, value)
                             } else {
+                                // @ts-ignore
                                 target[key] = this.deepAssign(target[key] || {}, value)
                             }
                         }

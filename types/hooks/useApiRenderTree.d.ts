@@ -20,5 +20,5 @@ export declare function useApiRenderTree(api: ApiRenderApiType, options: {
     treeValueKey?: string;
     treeChildrenKey?: string;
 }): {
-    apiRenderTreeData: import("vue").Ref<any[]>;
+    apiRenderTreeData: import("vue").Ref<any>;
 };
