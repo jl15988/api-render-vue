@@ -4,9 +4,10 @@
     "target": "ESNext",
     "strict": true,
     "moduleResolution": "Node",
-    "outDir": "lib",
+    "esModuleInterop": true,
+    //    "outDir": "lib",
     "declaration": true,
-    "declarationDir": "types",
+//    "declarationDir": "types",
     "baseUrl": "./"
 //    "paths": {
 //      "@/*": [

@@ -1,10 +1,9 @@
 import {ApiRenderApiType, getApiRenderCache, reloadApiRenderCache} from "../ApiRenderCache";
-import {computed, defineComponent, h, PropType, ref} from "vue";
+import {ref} from "vue";
 import {renderApiValueByOptions} from "./renderApiRenderValue";
 import apiRenderConfig from "../ApiRenderConfig";
 import {ApiRenderTreeOptionType, renderApiTreeByOptions} from "./renderApiRenderTree";
 import {ApiRenderOptionsOptionType, renderApiOptionsByOptions} from "./renderApiRenderOptions";
-import ApiRenderUtil from "../ApiRenderTool";
 
 export type ApiRenderOptionsKeyConfigType = {
     labelKey: string
@@ -24,7 +23,7 @@ export type ApiRenderOptionsConfigType = Partial<ApiRenderOptionsKeyConfigType> 
 
 export type ApiRenderOptionsType = Record<string, ApiRenderOptionsConfigType | ApiRenderApiType>
 
-export const apiOptions: ApiRenderOptionsType = {}
+export const apiOptionsMap: ApiRenderOptionsType = {}
 
 // api 响应式数据缓存
 export const apiMapRef = ref<{
@@ -60,66 +59,48 @@ export function getDefaultApiRenderOptionsConfig(): ApiRenderOptionsKeyConfigTyp
     }
 }
 
-/**
- * 设置 api 项
- */
-export function defineApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
+export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D | P, options: P = {} as P) {
+    const apiId = typeof id === 'string' ? id : ''
+    const apiOptions = typeof id === 'object' ? id : options
+    type OptionsKeyMapType = {
+        [key in keyof P]: string
+    }
+    const keysMap: OptionsKeyMapType = {} as OptionsKeyMapType
     // 赋值默认值
     const defaultApiRenderOptionsConfig = getDefaultApiRenderOptionsConfig()
-    ops = Object.assign({}, defaultApiRenderOptionsConfig, ops)
-    Object.assign(apiOptions, ops)
-
-    type keysMapType = {
-        [key in keyof T]: any
+    for (let opsKey in apiOptions) {
+        const optionId = apiId + '#' + opsKey
+        apiOptionsMap[optionId] = apiOptions[opsKey] = Object.assign({}, defaultApiRenderOptionsConfig, apiOptions[opsKey]);
+        // 添加项 key
+        keysMap[opsKey] = optionId
     }
 
-    const keysMap: keysMapType = {} as keysMapType
-    for (let opsKey in ops) {
-        keysMap[opsKey] = opsKey
+    function renderApiValue(apiKey: keyof P, value: any, valueKey?: string, labelKey?: string) {
+        return renderApiValueByOptions(apiOptions, apiKey, value, valueKey, labelKey)
     }
 
-    function renderApiValue(apiKey: keyof T, value: any, valueKey?: string, labelKey?: string) {
-        return renderApiValueByOptions(ops, apiKey, value, valueKey, labelKey)
+    function renderApiOptions(apiKey: keyof P, options: ApiRenderOptionsOptionType) {
+        return renderApiOptionsByOptions<P>(apiOptions, apiKey, options)
     }
 
-    function renderApiOptions(apiKey: keyof T, options: ApiRenderOptionsOptionType) {
-        return renderApiOptionsByOptions<T>(ops, apiKey, options)
+    function renderApiTree(apiKey: keyof P, options: ApiRenderTreeOptionType) {
+        return renderApiTreeByOptions(apiOptions, apiKey, options)
     }
 
-    function renderApiTree(apiKey: keyof T, options: ApiRenderTreeOptionType) {
-        return renderApiTreeByOptions(ops, apiKey, options)
-    }
-
-    function reloadApiRenderOptionsData(...apiKeys: (keyof T)[]) {
+    function reloadApiRenderOptionsData(...apiKeys: (keyof P)[]) {
         const keys = apiKeys ? apiKeys.map(item => item.toString()) : Object.keys(apiMapRef.value)
-        reloadApiRenderCache(...keys).then(() =>{
+        reloadApiRenderCache(...keys).then(() => {
             for (let key of keys) {
-                getApiData(ops, key)
+                getApiData(apiOptions, key)
             }
         })
     }
 
-    const ApiRender = defineComponent({
-        name: 'ApiRender',
-        props:{
-            apiKey:{
-                type: [String] as PropType<keyof T>,
-                required: true
-            },
-            value:{
-                type: Function as PropType<any>
-            }
-        },
-        async render() {
-            const {apiKey, value} = this.$props
-            // @ts-ignore
-            return renderApiValueByOptions(ops, apiKey, value)
-        }
-    })
-
     return {
+        /**
+         * api 项的关键字映射
+         */
         keysMap,
-        ApiRender,
         /**
          * 解析 api 数据，匹配值，返回 label
          * @param apiKey api 的 option 关键字
@@ -142,7 +123,7 @@ export function defineApiRenderOptions<T extends ApiRenderOptionsType>(ops: T) {
         renderApiTree,
         /**
          * 重新加载 api 项数据
-         * @param apiKey 要重载的 api 项 key
+         * @param apiKeys 要重载的 api 项 key
          */
         reloadApiRenderOptionsData
     }

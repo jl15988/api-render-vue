@@ -1,7 +1,6 @@
-import { defineApiRenderOptions } from "./options/ApiRenderOptions";
+import { defineApiRender } from "./options/ApiRenderOptions";
 import { getApiRenderCache, reloadApiRenderCache, setApiRenderCache } from './ApiRenderCache';
 import ApiRenderTool from "./ApiRenderTool";
-import ApiRenderValues from "./values";
 import { getApiRenderConfig, setApiRenderConfig } from "./ApiRenderConfig";
 declare const ApiRenderUtils: {
     ArrayUtil: {
@@ -40,6 +39,34 @@ declare const ApiRenderUtils: {
         toTreeMapper(list: any[], obj: any, idName: string, parentName: string, mapper: import("./utils/TreeUtil").TreeNodeMapper, leafMapper?: import("./utils/TreeUtil").TreeLeafNodeMapper | undefined, parentLevel?: number | undefined): void;
     };
 };
-declare const apiRenderVue: typeof ApiRenderValues;
-export default apiRenderVue;
-export { defineApiRenderOptions, setApiRenderCache, getApiRenderCache, reloadApiRenderCache, ApiRenderTool, setApiRenderConfig, getApiRenderConfig, ApiRenderUtils };
+declare const ApiRender: import("vue").DefineComponent<{
+    /**
+     * api 键
+     */
+    apiKey: {
+        type: StringConstructor[];
+        required: true;
+    };
+    /**
+     * 匹配值
+     */
+    value: {
+        type: (StringConstructor | NumberConstructor | BooleanConstructor)[];
+    };
+}, () => any, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    /**
+     * api 键
+     */
+    apiKey: {
+        type: StringConstructor[];
+        required: true;
+    };
+    /**
+     * 匹配值
+     */
+    value: {
+        type: (StringConstructor | NumberConstructor | BooleanConstructor)[];
+    };
+}>>, {}, {}>;
+export { defineApiRender, setApiRenderCache, getApiRenderCache, reloadApiRenderCache, ApiRenderTool, setApiRenderConfig, getApiRenderConfig, ApiRenderUtils };
+export default ApiRender;

@@ -1,5 +1,4 @@
 import { ApiRenderApiType } from "../ApiRenderCache";
-import { PropType } from "vue";
 import { ApiRenderTreeOptionType } from "./renderApiRenderTree";
 import { ApiRenderOptionsOptionType } from "./renderApiRenderOptions";
 export type ApiRenderOptionsKeyConfigType = {
@@ -17,7 +16,7 @@ export type ApiRenderOptionsConfigType = Partial<ApiRenderOptionsKeyConfigType> 
     api: ApiRenderApiType;
 };
 export type ApiRenderOptionsType = Record<string, ApiRenderOptionsConfigType | ApiRenderApiType>;
-export declare const apiOptions: ApiRenderOptionsType;
+export declare const apiOptionsMap: ApiRenderOptionsType;
 export declare const apiMapRef: import("vue").Ref<{
     [key: string]: any;
     [key: number]: any;
@@ -32,28 +31,11 @@ export declare function getApiMapRefValue(apiKey: string | number | symbol): any
  * 获取默认的项配置
  */
 export declare function getDefaultApiRenderOptionsConfig(): ApiRenderOptionsKeyConfigType;
-/**
- * 设置 api 项
- */
-export declare function defineApiRenderOptions<T extends ApiRenderOptionsType>(ops: T): {
-    keysMap: { [key in keyof T]: any; };
-    ApiRender: import("vue").DefineComponent<{
-        apiKey: {
-            type: PropType<keyof T>;
-            required: true;
-        };
-        value: {
-            type: PropType<any>;
-        };
-    }, unknown, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
-        apiKey: {
-            type: PropType<keyof T>;
-            required: true;
-        };
-        value: {
-            type: PropType<any>;
-        };
-    }>>, {}, {}>;
+export declare function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D | P, options?: P): {
+    /**
+     * api 项的关键字映射
+     */
+    keysMap: { [key in keyof P]: string; };
     /**
      * 解析 api 数据，匹配值，返回 label
      * @param apiKey api 的 option 关键字
@@ -61,24 +43,24 @@ export declare function defineApiRenderOptions<T extends ApiRenderOptionsType>(o
      * @param valueKey 要匹配的数据 value 关键字
      * @param labelKey 返回的 label 关键字
      */
-    renderApiValue: (apiKey: keyof T, value: any, valueKey?: string, labelKey?: string) => Promise<any>;
+    renderApiValue: (apiKey: keyof P, value: any, valueKey?: string, labelKey?: string) => Promise<any>;
     /**
      * 解析 api 数据为选择项数据
      * @param apiKey api 的 option 关键字
      * @param options 配置项
      */
-    renderApiOptions: (apiKey: keyof T, options: ApiRenderOptionsOptionType) => any;
+    renderApiOptions: (apiKey: keyof P, options: ApiRenderOptionsOptionType) => any;
     /**
      * 解析 api 数据为树结构数据
      * @param apiKey api 的 option 关键字
      * @param options 配置项
      */
-    renderApiTree: (apiKey: keyof T, options: ApiRenderTreeOptionType) => any[];
+    renderApiTree: (apiKey: keyof P, options: ApiRenderTreeOptionType) => any[];
     /**
      * 重新加载 api 项数据
      * @param apiKey 要重载的 api 项 key
      */
-    reloadApiRenderOptionsData: (...apiKeys: (keyof T)[]) => void;
+    reloadApiRenderOptionsData: (...apiKeys: (keyof P)[]) => void;
 };
 /**
  * 先判断有没有缓存再获取 api 数据并放到 api 响应式缓存中

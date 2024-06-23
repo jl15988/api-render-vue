@@ -23,8 +23,8 @@ function createEntry(options) {
         output: {
             name: 'apiRenderVue',
             file: options.file,
-            format: options.format,
-            exports: 'default',
+            format: options.format === 'types' ? 'es' : options.format,
+            exports: 'auto',
             globals: {
                 vue: 'Vue'
             },
@@ -32,10 +32,10 @@ function createEntry(options) {
         },
         plugins: [
             ts({
-                check: options.format === 'es',
+                check: options.format === 'types',
                 tsconfigOverride: {
                     compilerOptions: {
-                        declaration: options.format === 'es',
+                        declaration: options.format === 'types',
                     },
                     exclude: ['src', 'example'],
                 }
@@ -68,8 +68,9 @@ const browserPlugins = [
 ]
 
 export default [
-    createEntry({ format: 'cjs', file: pkg.main }),
+    createEntry({ format: 'cjs', file: pkg.common }),
     createEntry({ format: 'es', file: pkg.module }),
     createEntry({ format: 'umd', file: pkg.browser, }),
     createEntry({ format: 'umd', file: pkg.unpkg, plugins: browserPlugins }),
+    createEntry({ format: 'types', file: pkg.types }),
 ]
