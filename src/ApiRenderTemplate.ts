@@ -1,30 +1,90 @@
 import {VNode} from "vue";
+import {ApiRenderProps} from "./ApiRenderVue";
 
-type ApiRenderTemplateType = Record<string, (value: any, prop: Record<string, any>, data?: any) => string | VNode>
+export type ApiRenderTemplateParamsType = {
+    /**
+     * 当前值
+     */
+    value: any,
+    /**
+     * 组件属性
+     */
+    prop: ApiRenderProps,
+    /**
+     * 获取的 api 数据
+     */
+    data?: any | any[],
+    /**
+     * 组件绑定值
+     */
+    modelValue?: any,
+    /**
+     * 更新组件绑定值的回调
+     * @param value 要更新的值
+     */
+    modelBack?: (value: any) => any
+}
 
-const apiRenderTemplate: ApiRenderTemplateType = {}
+type ApiRenderTemplateType = Record<string, (params: ApiRenderTemplateParamsType) => string | VNode | string[] | VNode[]>
+
+export const apiRenderTemplate: ApiRenderTemplateType = {}
+
+type DefineApiRenderTemplateType<T> = {
+    /**
+     * 统一模板关键字映射
+     */
+    keys: { [key in keyof T]: string; };
+}
 
 /**
- * 设置统一模板
- * @param templates 模板
+ * 定义统一模板
+ * @param id 分包 ID
+ * @param templates 模板项
  */
-function setApiRenderTemplates<T extends ApiRenderTemplateType>(templates: T) {
-    const apiRenderTemplateNamesMap: {
-        [key in keyof T]: key
+export function defineApiRenderTemplates<D extends string, T extends ApiRenderTemplateType>(id: D, templates: T): DefineApiRenderTemplateType<T>
+/**
+ * 定义统一模板
+ * @param templates 模板项
+ */
+export function defineApiRenderTemplates<T extends ApiRenderTemplateType>(templates: T): DefineApiRenderTemplateType<T>
+
+/**
+ * 定义统一模板
+ * @param id 分包 ID
+ * @param templates 模板项
+ */
+export function defineApiRenderTemplates<D extends string, T extends ApiRenderTemplateType>(id: D | T, templates: T = {} as T) {
+    const templateId = typeof id === 'string' ? id : ''
+    const templateOptions = typeof id === 'object' ? id : templates
+    const keys: {
+        [key in keyof T]: string
     } = {} as {
-        [key in keyof T]: key
+        [key in keyof T]: string
     }
-    for (let templatesKey in templates) {
-        apiRenderTemplateNamesMap[templatesKey] = templatesKey
-        apiRenderTemplate[templatesKey] = templates[templatesKey]
+    for (let templatesKey in templateOptions) {
+        const optionId = templateId + '#' + templatesKey
+        keys[templatesKey] = optionId
+        apiRenderTemplate[optionId] = templateOptions[templatesKey]
     }
 
     return {
-        apiRenderTemplateNamesMap
+        keys
     }
 }
 
-export {
-    apiRenderTemplate,
-    setApiRenderTemplates
+/**
+ * 根据模板名称获取模板函数
+ * @param name 模板名称
+ */
+export function getTemplate(name?: string) {
+    let renderFun = (params: ApiRenderTemplateParamsType) => {
+        return params.value
+    }
+    if (name) {
+        const templateFun = apiRenderTemplate[name]
+        if (templateFun) {
+            renderFun = templateFun
+        }
+    }
+    return renderFun
 }

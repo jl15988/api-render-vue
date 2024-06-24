@@ -63,7 +63,7 @@ type DefineApiRenderResultType<P> = {
     /**
      * api 项的关键字映射
      */
-    keysMap: { [key in keyof P]: string; };
+    keys: { [key in keyof P]: string; };
     /**
      * 解析 api 数据，匹配值，返回 label
      * @param apiKey api 的 option 关键字
@@ -91,23 +91,37 @@ type DefineApiRenderResultType<P> = {
     reloadApiRenderOptionsData: (...apiKeys: (keyof P)[]) => void;
 }
 
+/**
+ * 定义 api 项
+ * @param id 分包 ID
+ * @param options api 项
+ */
 export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D, options: P): DefineApiRenderResultType<P>
+/**
+ * 定义 api 项
+ * @param options api 项
+ */
 export function defineApiRender<P extends ApiRenderOptionsType>(options: P): DefineApiRenderResultType<P>
 
+/**
+ * 定义 api 项
+ * @param id 分包 ID
+ * @param options api 项
+ */
 export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D | P, options: P = {} as P) {
     const apiId = typeof id === 'string' ? id : ''
     const apiOptions = typeof id === 'object' ? id : options
     type OptionsKeyMapType = {
         [key in keyof P]: string
     }
-    const keysMap: OptionsKeyMapType = {} as OptionsKeyMapType
+    const keys: OptionsKeyMapType = {} as OptionsKeyMapType
     // 赋值默认值
     const defaultApiRenderOptionsConfig = getDefaultApiRenderOptionsConfig()
     for (let opsKey in apiOptions) {
         const optionId = apiId + '#' + opsKey
         apiOptionsMap[optionId] = apiOptions[opsKey] = Object.assign({}, defaultApiRenderOptionsConfig, apiOptions[opsKey]);
         // 添加项 key
-        keysMap[opsKey] = optionId
+        keys[opsKey] = optionId
     }
 
     function renderApiValue(apiKey: keyof P, value: any, valueKey?: string, labelKey?: string) {
@@ -135,7 +149,7 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
         /**
          * api 项的关键字映射
          */
-        keysMap,
+        keys,
         /**
          * 解析 api 数据，匹配值，返回 label
          * @param apiKey api 的 option 关键字
