@@ -22,7 +22,7 @@ export type ApiRenderTemplateParamsType = {
      * 更新组件绑定值的回调
      * @param value 要更新的值
      */
-    modelBack?: (value: any) => any
+    modelBack: (value: any) => any
 }
 
 type ApiRenderTemplateType = Record<string, (params: ApiRenderTemplateParamsType) => string | VNode | string[] | VNode[]>
@@ -41,19 +41,19 @@ type DefineApiRenderTemplateType<T> = {
  * @param id 分包 ID
  * @param templates 模板项
  */
-export function defineApiRenderTemplates<D extends string, T extends ApiRenderTemplateType>(id: D, templates: T): DefineApiRenderTemplateType<T>
+export function defineApiTemplates<D extends string, T extends ApiRenderTemplateType>(id: D, templates: T): DefineApiRenderTemplateType<T>
 /**
  * 定义统一模板
  * @param templates 模板项
  */
-export function defineApiRenderTemplates<T extends ApiRenderTemplateType>(templates: T): DefineApiRenderTemplateType<T>
+export function defineApiTemplates<T extends ApiRenderTemplateType>(templates: T): DefineApiRenderTemplateType<T>
 
 /**
  * 定义统一模板
  * @param id 分包 ID
  * @param templates 模板项
  */
-export function defineApiRenderTemplates<D extends string, T extends ApiRenderTemplateType>(id: D | T, templates: T = {} as T) {
+export function defineApiTemplates<D extends string, T extends ApiRenderTemplateType>(id: D | T, templates: T = {} as T) {
     const templateId = typeof id === 'string' ? id : ''
     const templateOptions = typeof id === 'object' ? id : templates
     const keys: {

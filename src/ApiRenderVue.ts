@@ -40,8 +40,7 @@ export const ApiRender = defineComponent({
         templateName: String,
         modelValue: [String, Number, Boolean, Object]
     },
-    setup(props) {
-        const emits = defineEmits(['update:modelValue']);
+    setup(props, {emit}) {
         const {apiKey, value, templateName} = props
         // 获取数据
         getApiDataIfNot(apiOptionsMap, apiKey)
@@ -62,7 +61,7 @@ export const ApiRender = defineComponent({
                 data: apiMapRef.value[apiKey],
                 modelValue: props.modelValue,
                 modelBack(value: any) {
-                    emits('update:modelValue', value)
+                    emit('update:modelValue', value)
                 },
             })
         })

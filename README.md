@@ -35,7 +35,7 @@ pnpm i api-render-vue -S
 import axios from "axios";
 import {defineApiRender} from "api-render-vue";
 
-const apiRenderOptions = defineApiRender({
+export const apiRenderOptions = defineApiRender({
     getUser: {
         api: async () => {
             const res = await axios.get('http://localhost:8080/common/getData')
@@ -44,8 +44,6 @@ const apiRenderOptions = defineApiRender({
         labelKey: 'name'
     }
 })
-
-export default apiRenderOptions
 ```
 
 然后再页面中使用
@@ -53,13 +51,14 @@ export default apiRenderOptions
 ```vue
 <template>
   <div class="home">
+    <!-- 通过 value 渲染名称 -->
     <api-render :api-key="apiRenderOptions.keys.getUser" value="20"></api-render>
   </div>
 </template>
 
 <script lang="ts" setup>
 import ApiRender from "api-render-vue";
-import apiRenderOptions from "@/apiRender";
+import {apiRenderOptions} from "@/apiRender";
 </script>
 ```
 
@@ -78,23 +77,49 @@ apiRenderOptions 中的属性
 
 定义统一模板
 ```ts
+import {defineApiTemplates} from "api-render-vue";
+import {h} from "vue";
+import {ElOption, ElSelect} from "element-plus";
+
 export const apiRenderTemplates = defineApiRenderTemplates({
-    elSelect: (value, prop, data) => {
+    elSelect: ({data, modelValue, modelBack}) => {
         const childs = []
         if (data) {
             for (let datum of data) {
                 childs.push(h(ElOption, {
-                    value: datum.value,
                     label: datum.name,
+                    value: datum.value,
                     key: datum.value
                 }))
             }
         }
-        return childs
+        return h(ElSelect, {
+            modelValue: modelValue,
+            onChange: (val) => {
+                modelBack && modelBack(val)
+            }
+        }, childs)
     }
 })
 ```
-然后在
+然后在 vue 中使用
+
+```vue
+<template>
+  <div class="home">
+    <!-- 按模版渲染 -->
+    <api-render
+      :api-key="apiRenderOptions.keys.getUser"
+      :template-name="apiRenderTemplates.keys.elSelect"
+      v-model="selectValue">
+    </api-render>
+  </div>
+</template>
+<script lang="ts" setup>
+import ApiRender from "api-render-vue";
+import apiRenderOptions, {apiRenderTemplates} from "@/apiRender";
+</script>
+```
 
 ## 属性
 

@@ -5,7 +5,7 @@ import {getApiRenderConfig, setApiRenderConfig} from "./ApiRenderConfig";
 import ArrayUtil from "./utils/ArrayUtil";
 import ObjectUtil from "./utils/ObjectUtil";
 import TreeUtil from "./utils/TreeUtil";
-import {defineApiRenderTemplates} from "./ApiRenderTemplate";
+import {defineApiTemplates} from "./ApiRenderTemplate";
 import {ApiRender} from "./ApiRenderVue";
 
 const ApiRenderUtils = {
@@ -23,7 +23,7 @@ export {
     setApiRenderConfig,
     getApiRenderConfig,
     ApiRenderUtils,
-    defineApiRenderTemplates
+    defineApiTemplates
 }
 
 export default ApiRender
