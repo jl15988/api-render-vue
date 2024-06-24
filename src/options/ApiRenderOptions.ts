@@ -59,6 +59,41 @@ export function getDefaultApiRenderOptionsConfig(): ApiRenderOptionsKeyConfigTyp
     }
 }
 
+type DefineApiRenderResultType<P> = {
+    /**
+     * api 项的关键字映射
+     */
+    keysMap: { [key in keyof P]: string; };
+    /**
+     * 解析 api 数据，匹配值，返回 label
+     * @param apiKey api 的 option 关键字
+     * @param value 要匹配的 value 值
+     * @param valueKey 要匹配的数据 value 关键字
+     * @param labelKey 返回的 label 关键字
+     */
+    renderApiValue: (apiKey: keyof P, value: any, valueKey?: string, labelKey?: string) => Promise<any>;
+    /**
+     * 解析 api 数据为选择项数据
+     * @param apiKey api 的 option 关键字
+     * @param options 配置项
+     */
+    renderApiOptions: (apiKey: keyof P, options: ApiRenderOptionsOptionType) => any;
+    /**
+     * 解析 api 数据为树结构数据
+     * @param apiKey api 的 option 关键字
+     * @param options 配置项
+     */
+    renderApiTree: (apiKey: keyof P, options: ApiRenderTreeOptionType) => any[];
+    /**
+     * 重新加载 api 项数据
+     * @param apiKeys 要重载的 api 项 key
+     */
+    reloadApiRenderOptionsData: (...apiKeys: (keyof P)[]) => void;
+}
+
+export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D, options: P): DefineApiRenderResultType<P>
+export function defineApiRender<P extends ApiRenderOptionsType>(options: P): DefineApiRenderResultType<P>
+
 export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D | P, options: P = {} as P) {
     const apiId = typeof id === 'string' ? id : ''
     const apiOptions = typeof id === 'object' ? id : options

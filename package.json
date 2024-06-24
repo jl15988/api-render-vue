@@ -1,6 +1,6 @@
 {
   "name": "api-render-vue",
-  "version": "0.0.1-alpha.17",
+  "version": "0.0.1-alpha.19",
   "description": "An API data parsing tool.",
   "type": "module",
   "main": "./dist/api-render-vue.esm.js",
@@ -34,7 +34,13 @@
   "keywords": [
     "apirender",
     "jl15988",
-    "api-render"
+    "api-render",
+    "dict",
+    "字典",
+    "vue",
+    "tag",
+    "template",
+    "模板"
   ],
   "author": "jl15988",
   "license": "MIT",
