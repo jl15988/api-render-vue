@@ -4,15 +4,14 @@ import terser from '@rollup/plugin-terser'
 import pkg from './package.json' assert { type: 'json' }
 
 const banner =
-    '/*!' +
+    '/**' +
     '\n * api-render-vue v' +
     pkg.version +
     '\n * ' +
     pkg.description +
-    '\n * © 2024-' +
-    new Date().getFullYear() +
-    ' @jl15988(https://github.com/jl15988)' +
-    '\n * MIT License.' +
+    '\n * Copyright (c)' +
+    ' jl15988(https://github.com/jl15988).' +
+    '\n * This source code is licensed under the MIT license(https://github.com/jl15988/api-render-vue/blob/master/LICENSE).' +
     '\n */'
 const sourcemap = false
 
