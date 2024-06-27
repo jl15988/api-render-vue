@@ -1,6 +1,6 @@
 {
   "name": "api-render-vue",
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "description": "An API data parsing tool.",
   "type": "module",
   "main": "./dist/api-render-vue.esm.js",

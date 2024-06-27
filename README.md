@@ -76,7 +76,7 @@ apiRenderOptions 中的属性
 ## 统一模板
 
 定义统一模板
-```ts
+```tsx
 import {defineApiTemplates} from "api-render-vue";
 import {h} from "vue";
 import {ElOption, ElSelect} from "element-plus";
@@ -101,6 +101,23 @@ export const apiRenderTemplates = defineApiRenderTemplates({
         }, childs)
     }
 })
+
+// 或者 jsx
+export const apiRenderTemplates = defineApiRenderTemplates({
+    elSelect: function (params: { data: IUser[], modelValue: string, modelBack: (value: string) => any }) {
+        const {data, modelValue, modelBack} = params;
+        return (
+            <ElSelect modelValue={modelValue} onChange={(e: string) => modelBack && modelBack(e)}>
+                {
+                    data ?
+                        data.map((item: any) => (
+                            <ElOption key={item.value} value={item.value} label={item.name}></ElOption>
+                        )) : ''
+                }
+            </ElSelect>
+        )
+    }
+})
 ```
 然后在 vue 中使用
 
@@ -117,7 +134,8 @@ export const apiRenderTemplates = defineApiRenderTemplates({
 </template>
 <script lang="ts" setup>
 import ApiRender from "api-render-vue";
-import apiRenderOptions, {apiRenderTemplates} from "@/apiRender";
+import apiRenderOptions from "@/apiRender";
+import apiRenderTemplates from "@/apiTemplates"
 </script>
 ```
 

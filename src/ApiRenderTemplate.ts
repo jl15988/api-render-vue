@@ -25,7 +25,7 @@ export type ApiRenderTemplateParamsType = {
     modelBack: (value: any) => any
 }
 
-type ApiRenderTemplateType = Record<string, (params: ApiRenderTemplateParamsType) => string | VNode | string[] | VNode[]>
+type ApiRenderTemplateType = Record<string, (params: ApiRenderTemplateParamsType) => string | VNode | string[] | VNode[]> | any
 
 export const apiRenderTemplate: ApiRenderTemplateType = {}
 
@@ -62,7 +62,7 @@ export function defineApiTemplates<D extends string, T extends ApiRenderTemplate
         [key in keyof T]: string
     }
     for (let templatesKey in templateOptions) {
-        const optionId = templateId + '#' + templatesKey
+        const optionId = templateId ? templateId + '#' + templatesKey : templatesKey
         keys[templatesKey] = optionId
         apiRenderTemplate[optionId] = templateOptions[templatesKey]
     }

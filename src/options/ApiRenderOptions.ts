@@ -114,14 +114,14 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
     type OptionsKeyMapType = {
         [key in keyof P]: string
     }
-    const keys: OptionsKeyMapType = {} as OptionsKeyMapType
+    const optionsKeys: OptionsKeyMapType = {} as OptionsKeyMapType
     // 赋值默认值
     const defaultApiRenderOptionsConfig = getDefaultApiRenderOptionsConfig()
     for (let opsKey in apiOptions) {
-        const optionId = apiId + '#' + opsKey
+        const optionId = apiId ? apiId + '#' + opsKey : opsKey
         apiOptionsMap[optionId] = apiOptions[opsKey] = Object.assign({}, defaultApiRenderOptionsConfig, apiOptions[opsKey]);
         // 添加项 key
-        keys[opsKey] = optionId
+        optionsKeys[opsKey] = optionId
     }
 
     function renderApiValue(apiKey: keyof P, value: any, valueKey?: string, labelKey?: string) {
@@ -137,7 +137,7 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
     }
 
     function reloadApiRenderOptionsData(...apiKeys: (keyof P)[]) {
-        const keys = apiKeys ? apiKeys.map(item => item.toString()) : Object.keys(apiMapRef.value)
+        const keys = apiKeys ? apiKeys.map(item => item.toString()) : Object.values(optionsKeys)
         reloadApiRenderCache(...keys).then(() => {
             for (let key of keys) {
                 getApiData(apiOptions, key)
@@ -149,7 +149,7 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
         /**
          * api 项的关键字映射
          */
-        keys,
+        keys: optionsKeys,
         /**
          * 解析 api 数据，匹配值，返回 label
          * @param apiKey api 的 option 关键字
