@@ -48,11 +48,6 @@ export function defineApiTemplates<D extends string, T extends ApiRenderTemplate
  */
 export function defineApiTemplates<T extends ApiRenderTemplateType>(templates: T): DefineApiRenderTemplateType<T>
 
-/**
- * 定义统一模板
- * @param id 分包 ID
- * @param templates 模板项
- */
 export function defineApiTemplates<D extends string, T extends ApiRenderTemplateType>(id: D | T, templates: T = {} as T) {
     const templateId = typeof id === 'string' ? id : ''
     const templateOptions = typeof id === 'object' ? id : templates

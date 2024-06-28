@@ -2,3 +2,5 @@
 /node_modules
 /dist
 /types
+/docs/api
+/docs/.vitepress/dist

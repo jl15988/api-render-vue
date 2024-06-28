@@ -26,7 +26,11 @@
   "scripts": {
     "build": "rollup -c",
     "webpack": "webpack",
-    "toPublish": "npm publish --registry=https://registry.npmjs.org --access=public"
+    "toPublish": "npm publish --registry=https://registry.npmjs.org --access=public",
+    "predocs": "typedoc src/index.ts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "repository": {
     "type": "git",
@@ -53,6 +57,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/types": "^7.24.7",
     "@rollup/plugin-terser": "^0.4.4",
     "@vue/compiler-sfc": "^3.3.11",
     "@vue/server-renderer": "^3.3.11",
@@ -62,7 +67,11 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "terser-webpack-plugin": "^5.3.10",
     "ts-loader": "^9.5.1",
+    "typedoc": "^0.26.3",
+    "typedoc-plugin-markdown": "^4.1.0",
+    "typedoc-vitepress-theme": "^1.0.0",
     "typescript": "^5.4.5",
+    "vitepress": "^1.2.3",
     "vue": "^3.4.29",
     "vue-loader": "^17.4.2",
     "webpack": "^5.91.0",

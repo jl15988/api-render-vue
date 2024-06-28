@@ -130,11 +130,6 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
  */
 export function defineApiRender<P extends ApiRenderOptionsType>(options: P): DefineApiRenderResultType<P>
 
-/**
- * 定义 api 项
- * @param id 分包 ID
- * @param options api 项
- */
 export function defineApiRender<D extends string, P extends ApiRenderOptionsType>(id: D | P, options: P = {} as P) {
     const apiId = typeof id === 'string' ? id : ''
     const apiOptions = typeof id === 'object' ? id : options
