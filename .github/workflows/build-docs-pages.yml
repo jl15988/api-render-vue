@@ -33,5 +33,5 @@ jobs:
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.api_render_vue_build_token }}   # 替换为你刚刚添加的secret的名字
-          publish_dir: ./docs/pages  # 根据你的打包输出目录进行调整
+          github_token: ${{ secrets.api_render_vue_build_token }}
+          publish_dir: ./pages
