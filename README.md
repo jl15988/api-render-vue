@@ -6,9 +6,10 @@
 
 ## 优点
 
-1. 组件化，使用简单，通过 vue 组件传入 apiKey 及 value 即可自动`异步`获取数据且渲染
-2. 数据缓存，每次使用数据优先使用缓存数据（相当于状态数据，不会保存到浏览器本地，如果浏览器刷新，则会重新获取），可配置缓存`有效期`，超期重新获取，或者手动刷新缓存
-3. 统一配置，可自定义各项配置及 api 项，便于维护
+1. 组件化，[使用简单](./documents/SIMPLE.MD)，通过 vue 组件传入 apiKey 及 value 即可自动`异步`获取数据且渲染
+2. [统一模版](./documents/COMMON_TEMPLATE.md)，通过配置统一模版可实现在页面中自动渲染指定组件，支持数据的双向绑定，实现组件统一配置，统一管理
+3. 数据缓存，每次使用数据优先使用缓存数据（相当于状态数据，不会保存到浏览器本地，如果浏览器刷新，则会重新获取），可配置缓存`有效期`，超期重新获取，或者手动刷新缓存
+4. 统一配置，可自定义各项配置及 api 项，便于维护
 
 ## 安装
 
@@ -27,124 +28,6 @@ pnpm 安装
 pnpm i api-render-vue -S
 ```
 
-## 使用
-
-创建 apiRender.ts
-
-```ts
-import axios from "axios";
-import {defineApiRender} from "api-render-vue";
-
-export const apiRenderOptions = defineApiRender({
-    getUser: {
-        api: async () => {
-            const res = await axios.get('http://localhost:8080/common/getData')
-            return res.data
-        },
-        labelKey: 'name'
-    }
-})
-```
-
-然后再页面中使用
-
-```vue
-<template>
-  <div class="home">
-    <!-- 通过 value 渲染名称 -->
-    <api-render :api-key="apiRenderOptions.keys.getUser" value="20"></api-render>
-  </div>
-</template>
-
-<script lang="ts" setup>
-import ApiRender from "api-render-vue";
-import {apiRenderOptions} from "@/apiRender";
-</script>
-```
-
-
-apiRenderOptions 中的属性
-
-| 属性               | 参数                                                                                                    | 描述                     |
-|------------------|-------------------------------------------------------------------------------------------------------|------------------------|
-| keys             | 无                                                                                                     | api 项的关键字映射            |
-| renderApiValue   | apiKey： api 的 option 关键字，param： value 要匹配的 value 值，valueKey： 要匹配的数据 value 关键字，labelKey： 返回的 label 关键字 | 解析 api 数据，匹配值，返回 label |
-| renderApiOptions | apiKey： api 的 option 关键字，options： 配置项                                                                 | 解析 api 数据为选择项数据        |
-| renderApiTree    | apiKey： api 的 option 关键字，options： 配置项                                                                 | 解析 api 数据为树结构数据        |
-| reloadApiData    | apiKeys 要重载的 api 项 key                                                                                | 重新加载 api 项数据           |
-
-## 统一模板
-
-定义统一模板
-```tsx
-import {defineApiTemplates} from "api-render-vue";
-import {h} from "vue";
-import {ElOption, ElSelect} from "element-plus";
-
-export const apiRenderTemplates = defineApiRenderTemplates({
-    elSelect: ({data, modelValue, modelBack}) => {
-        const childs = []
-        if (data) {
-            for (let datum of data) {
-                childs.push(h(ElOption, {
-                    label: datum.name,
-                    value: datum.value,
-                    key: datum.value
-                }))
-            }
-        }
-        return h(ElSelect, {
-            modelValue: modelValue,
-            onChange: (val) => {
-                modelBack && modelBack(val)
-            }
-        }, childs)
-    }
-})
-
-// 或者 jsx
-export const apiRenderTemplates = defineApiRenderTemplates({
-    elSelect: function (params: { data: IUser[], modelValue: string, modelBack: (value: string) => any }) {
-        const {data, modelValue, modelBack} = params;
-        return (
-            <ElSelect modelValue={modelValue} onChange={(e: string) => modelBack && modelBack(e)}>
-                {
-                    data ?
-                        data.map((item: any) => (
-                            <ElOption key={item.value} value={item.value} label={item.name}></ElOption>
-                        )) : ''
-                }
-            </ElSelect>
-        )
-    }
-})
-```
-然后在 vue 中使用
-
-```vue
-<template>
-  <div class="home">
-    <!-- 按模版渲染 -->
-    <api-render
-      :api-key="apiRenderOptions.keys.getUser"
-      :template-name="apiRenderTemplates.keys.elSelect"
-      v-model="selectValue">
-    </api-render>
-  </div>
-</template>
-<script lang="ts" setup>
-import ApiRender from "api-render-vue";
-import apiRenderOptions from "@/apiRender";
-import apiRenderTemplates from "@/apiTemplates"
-</script>
-```
-
 ## 属性
 
-| 属性                   | 参数                                                         | 描述                                |
-|----------------------|------------------------------------------------------------|-----------------------------------|
-| defineApiRender      | id：定义的 id 值（可选），当定义多个 api 项时，用以区分，否则将会覆盖，options：定义的 api 项 | 定义 api 项，使用组件时，可传入 apiKey 来自动获取数据 |
-| reloadApiRenderCache | apiKeys：要加载的 api 缓存的 key                                   | 重新加载 api 缓存                       |
-| setApiRenderConfig   | config：配置项                                                 | 设置全局配置项                           |
-| getApiRenderConfig   | 无                                                          | 获取配置                              |
-| defineApiRenderTemplates                     | templates：模板                                               | 定义统一模板，传入组件对应的 name 可渲染模板函数返回的内容  |
+见[属性文档](./documents/ATTRIBUTE.md)

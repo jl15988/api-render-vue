@@ -6,14 +6,41 @@ import {ApiRenderTreeOptionType, renderApiTreeByOptions} from "./renderApiRender
 import {ApiRenderOptionsOptionType, renderApiOptionsByOptions} from "./renderApiRenderOptions";
 
 export type ApiRenderOptionsKeyConfigType = {
+    /**
+     * label 关键字，默认 label
+     */
     labelKey: string
+    /**
+     * value 关键字，默认 value
+     */
     valueKey: string
+    /**
+     * 树结构 label 关键字，默认 label
+     */
     treeValueKey: string
+    /**
+     * 树结构 value 关键字，默认 value
+     */
     treeLabelKey: string
+    /**
+     * 树结构主键关键字，默认 id
+     */
     treeIdKey: string
+    /**
+     * 树结构子节点关键字，默认 children
+     */
     treeChildrenKey: string
+    /**
+     * 树结构父级主键关键字，默认 parentId
+     */
     treeParentIdKey: string
+    /**
+     * 选择项中值关键字，默认 value
+     */
     optionsValueKey: string
+    /**
+     * 选择项中名称关键字，默认 label
+     */
     optionsLabelKey: string
 }
 
