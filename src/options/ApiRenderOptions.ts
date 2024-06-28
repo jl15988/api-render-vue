@@ -88,7 +88,7 @@ type DefineApiRenderResultType<P> = {
      * 重新加载 api 项数据
      * @param apiKeys 要重载的 api 项 key
      */
-    reloadApiRenderOptionsData: (...apiKeys: (keyof P)[]) => void;
+    reloadApiData: (...apiKeys: (keyof P)[]) => void;
 }
 
 /**
@@ -136,7 +136,7 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
         return renderApiTreeByOptions(apiOptions, apiKey, options)
     }
 
-    function reloadApiRenderOptionsData(...apiKeys: (keyof P)[]) {
+    function reloadApiData(...apiKeys: (keyof P)[]) {
         const keys = apiKeys ? apiKeys.map(item => item.toString()) : Object.values(optionsKeys)
         reloadApiRenderCache(...keys).then(() => {
             for (let key of keys) {
@@ -174,7 +174,7 @@ export function defineApiRender<D extends string, P extends ApiRenderOptionsType
          * 重新加载 api 项数据
          * @param apiKeys 要重载的 api 项 key
          */
-        reloadApiRenderOptionsData
+        reloadApiData
     }
 }
 
