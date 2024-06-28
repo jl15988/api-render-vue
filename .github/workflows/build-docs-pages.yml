@@ -1,0 +1,36 @@
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Api Render Vue Build Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["master"]
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+ 
+      - name: Build the project
+        run: npm run build
+
+      - name: Predocs
+        run: npm run predocs
+
+      - name: Build docs
+        run: npm run docs:build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.api_render_vue_build_token }}   # 替换为你刚刚添加的secret的名字
+          publish_dir: ./docs/pages  # 根据你的打包输出目录进行调整
