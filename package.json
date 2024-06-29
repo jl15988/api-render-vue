@@ -52,7 +52,7 @@
   "bugs": {
     "url": "https://github.com/jl15988/api-render-vue/issues"
   },
-  "homepage": "https://github.com/jl15988/api-render-vue#readme",
+  "homepage": "https://jl15988.github.io/api-render-vue/",
   "peerDependencies": {
     "vue": "^3.0.0"
   },

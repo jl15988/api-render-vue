@@ -28,6 +28,6 @@ pnpm 安装
 pnpm i api-render-vue -S
 ```
 
-## 属性
+## 属性及API
 
-见[属性文档](./documents/ATTRIBUTE.md)
+见 [属性文档](./documents/ATTRIBUTE.md) 或 [API文档](https://jl15988.github.io/api-render-vue/)
