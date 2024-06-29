@@ -79,4 +79,4 @@ const selectValue = ref('')
 </script>
 ```
 
-如上，在使用 api-render 组件时，指定 templateName 属性，即可渲染指定模版内容（这里的 ids 与[简单使用](./SIMPLE.MD)中的 ids 相同）
+如上，在使用 api-render 组件时，指定 templateName 属性，即可渲染指定模版内容（这里的 ids 与[简单使用](SIMPLE.MD)中的 ids 相同）
