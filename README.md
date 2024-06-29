@@ -1,4 +1,4 @@
-# api-render-vue
+# ![ApiRenderLogo](static/logo.png) api-render-vue
 
 [![License](https://img.shields.io/npm/l/api-render-vue?color=5470c6)](https://github.com/jl15988/api-render-vue/blob/master/LICENSE) [![Latest npm release](https://img.shields.io/npm/v/api-render-vue?color=91cc75)](https://www.npmjs.com/package/api-render-vue) [![NPM downloads](https://img.shields.io/npm/dm/api-render-vue.svg?label=npm%20downloads&style=flat&color=fac858)](https://www.npmjs.com/package/api-render-vue)
 

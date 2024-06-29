@@ -21,7 +21,8 @@
   "files": [
     "dist",
     "types",
-    "documents"
+    "documents",
+    "static"
   ],
   "scripts": {
     "example": "webpack serve --config webpack.config.js --mode=development",

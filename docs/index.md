@@ -6,6 +6,9 @@ hero:
   name: "API Render Vue"
   text: "一个 API 数据渲染工具"
   tagline: Make your data rendering more standardized.
+  image:
+    src: /logo.png
+    alt: ApiRender
   actions:
     - theme: brand
       text: 查看 API
