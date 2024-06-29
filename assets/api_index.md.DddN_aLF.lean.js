@@ -1,1 +1,0 @@
-import{_ as a,c as e,o as i,a2 as s}from"./chunks/framework.BSB0Uh0P.js";const u=JSON.parse('{"title":"api-render-vue","description":"","frontmatter":{},"headers":[],"relativePath":"api/index.md","filePath":"api/index.md"}'),t={name:"api/index.md"},p=s("",14),n=[p];function r(l,h,d,o,c,k){return i(),e("div",null,n)}const g=a(t,[["render",r]]);export{u as __pageData,g as default};
