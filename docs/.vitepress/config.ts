@@ -4,6 +4,7 @@ import typedocSidebar from '../api/typedoc-sidebar.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/api-render-vue/',
   title: "API Render Vue API 文档",
   description: "An API data parsing tool.",
   themeConfig: {
