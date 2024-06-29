@@ -72,7 +72,7 @@ const apiRenderConfig: ApiRenderConfigType = {
 }
 
 export function setApiRenderConfig(config: Partial<ApiRenderConfigType>) {
-    Object.assign(config, apiRenderConfig);
+    Object.assign(apiRenderConfig, config);
 }
 
 export function getApiRenderConfig() {

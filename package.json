@@ -1,6 +1,6 @@
 {
   "name": "api-render-vue",
-  "version": "0.0.1-alpha.23",
+  "version": "0.0.1-alpha.25",
   "description": "An API data parsing tool.",
   "type": "module",
   "main": "./dist/api-render-vue.esm.js",
@@ -24,6 +24,7 @@
     "documents"
   ],
   "scripts": {
+    "example": "webpack serve --config webpack.config.js --mode=development",
     "build": "rollup -c",
     "webpack": "webpack",
     "toPublish": "npm publish --registry=https://registry.npmjs.org --access=public",

@@ -40,7 +40,7 @@ export const userApiRender = defineApiRender('user', {
 ```vue
 <template>
   <!-- 通过 value 渲染名称 -->
-  <api-render :api-key="apiRenders.keys.getUser" value="20"></api-render>
+  <api-render :id="apiRenders.ids.getUser" value="20"></api-render>
 </template>
 
 <script lang="ts" setup>
@@ -51,4 +51,4 @@ import {apiRenders} from "@/apiRenders";
 
 如上，我们通过 api-render 组件，传入 getUser 的 apiKey，指定 value 即可自动匹配数据项，然后渲染 label 字段
 
-每定义一个 apiRender，返回的结果中都会包含 keys 属性，这是 apiKey 的映射，如果你不想使用它（实际上推荐使用前者，方便维护，且避免出现因 apiKey 不正确而导致的不必要问题），可以直接传入 getUser，但如果你使用了 id 来定义 apiRender，则需要额外添加 id 值，通过 # 来间隔 apiKey，如：user#getUser
+每定义一个 apiRender，返回的结果中都会包含 ids 属性，这是 api 项 id 的映射，如果你不想使用它（实际上推荐使用前者，方便维护，且避免出现因 id 不正确而导致的不必要问题），可以直接传入 getUser，但如果你使用了 id 来定义 apiRender，则需要额外添加 id 值，通过 # 来间隔项 id，如：user#getUser

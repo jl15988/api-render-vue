@@ -17,7 +17,7 @@
 
 | 属性               | 参数                                                                                                    | 描述                     |
 |------------------|-------------------------------------------------------------------------------------------------------|------------------------|
-| keys             | 无                                                                                                     | api 项的关键字映射            |
+| ids              | 无                                                                                                     | api 项的 id 映射           |
 | renderApiValue   | apiKey： api 的 option 关键字，param： value 要匹配的 value 值，valueKey： 要匹配的数据 value 关键字，labelKey： 返回的 label 关键字 | 解析 api 数据，匹配值，返回 label |
 | renderApiOptions | apiKey： api 的 option 关键字，options： 配置项                                                                 | 解析 api 数据为选择项数据        |
 | renderApiTree    | apiKey： api 的 option 关键字，options： 配置项                                                                 | 解析 api 数据为树结构数据        |
@@ -26,6 +26,6 @@
 
 ## 3. defineApiTemplates 结果属性
 
-| 属性   | 参数 | 描述      |
-|------|----|---------|
-| keys | 无  | 模版关键字映射 |
+| 属性  | 参数 | 描述        |
+|-----|----|-----------|
+| ids | 无  | 模版项 id 映射 |

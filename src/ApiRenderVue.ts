@@ -22,9 +22,9 @@ export const ApiRender = defineComponent({
     name: 'ApiRender',
     props: {
         /**
-         * api 键
+         * api 项 id
          */
-        apiKey: {
+        id: {
             type: [String],
             required: true
         },
@@ -38,19 +38,22 @@ export const ApiRender = defineComponent({
          * 模板名称
          */
         templateName: String,
+        /**
+         * 绑定值
+         */
         modelValue: [String, Number, Boolean, Object]
     },
     setup(props, {emit}) {
-        const {apiKey, value, templateName} = props
+        const {id, value, templateName} = props
         // 获取数据
-        getApiDataIfNot(apiOptionsMap, apiKey)
+        getApiDataIfNot(apiOptionsMap, id)
         const renderValue = computed(() => {
             // 获取结果值
             let resValue = ''
-            const res = apiMapRef.value[apiKey]
+            const res = apiMapRef.value[id]
             if (res) {
-                const item = ApiRenderUtil.getItemByValue(res, value, getValueKey(apiKey))
-                resValue = ApiRenderUtil.renderValueByItem(item, getLabelKey(apiKey))
+                const item = ApiRenderUtil.getItemByValue(res, value, getValueKey(id))
+                resValue = ApiRenderUtil.renderValueByItem(item, getLabelKey(id))
             }
             // 获取模板函数
             const renderFun = getTemplate(templateName)
@@ -58,7 +61,7 @@ export const ApiRender = defineComponent({
                 value: resValue,
                 // @ts-ignore
                 prop: props,
-                data: apiMapRef.value[apiKey],
+                data: apiMapRef.value[id],
                 modelValue: props.modelValue,
                 modelBack(value: any) {
                     emit('update:modelValue', value)

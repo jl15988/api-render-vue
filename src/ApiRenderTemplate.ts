@@ -31,9 +31,9 @@ export const apiRenderTemplate: ApiRenderTemplateType = {}
 
 type DefineApiRenderTemplateType<T> = {
     /**
-     * 统一模板关键字映射
+     * 统一模板项 id 映射
      */
-    keys: { [key in keyof T]: string; };
+    ids: { [key in keyof T]: string; };
 }
 
 /**
@@ -51,19 +51,19 @@ export function defineApiTemplates<T extends ApiRenderTemplateType>(templates: T
 export function defineApiTemplates<D extends string, T extends ApiRenderTemplateType>(id: D | T, templates: T = {} as T) {
     const templateId = typeof id === 'string' ? id : ''
     const templateOptions = typeof id === 'object' ? id : templates
-    const keys: {
+    const templateIds: {
         [key in keyof T]: string
     } = {} as {
         [key in keyof T]: string
     }
     for (let templatesKey in templateOptions) {
         const optionId = templateId ? templateId + '#' + templatesKey : templatesKey
-        keys[templatesKey] = optionId
+        templateIds[templatesKey] = optionId
         apiRenderTemplate[optionId] = templateOptions[templatesKey]
     }
 
     return {
-        keys
+        ids: templateIds
     }
 }
 
