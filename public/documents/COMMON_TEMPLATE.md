@@ -28,7 +28,9 @@ export const apiRenderTemplates = defineApiTemplates({
             onChange: (val) => {
                 modelBack && modelBack(val)
             }
-        }, childs)
+        }, {
+            default: () => childs
+        })
     },
     elSelect2: function (params: { data: IUser[], modelValue: string, modelBack: (value: string) => any }) {
         const {data, modelValue, modelBack} = params;
@@ -46,7 +48,7 @@ export const apiRenderTemplates = defineApiTemplates({
 })
 ```
 
-如上，通过 defineApiTemplates 定义了两个模版，这两个模版其实效果是一样的，一个使用 h 函数，一个使用 jsx，从组件化上来看，推荐使用 jsx，h 函数可能会有某些警告，且性能可能不太好，如果为简单的组件，可以使用，可个人习惯吧
+如上，通过 defineApiTemplates 定义了两个模版，这两个模版其实效果是一样的，一个使用 h 函数，一个使用 jsx，看个人习惯
 
 当然，你可以指定 id 来划分不同模版
 
